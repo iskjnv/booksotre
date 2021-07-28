@@ -1,0 +1,193 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is a simple Library API",
+    "version" : "1.0.1",
+    "title" : "Simple Library API",
+    "contact" : {
+      "email" : "you@your-company.com"
+    }
+  },
+  "tags" : [ {
+    "name" : "admins",
+    "description" : "Secured Admin-only calls"
+  }, {
+    "name" : "developers",
+    "description" : "Operations available to regular developers"
+  } ],
+  "host" : "115.178.77.137:8000",
+  "basePath" : "/v1",
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/books" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "searches inventory",
+        "operationId" : "searchInventory",
+        "description" : "By passing in the appropriate options, you can search for\navailable inventory in the system\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "search results matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Book"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "developers" ],
+        "summary" : "adds an inventory item",
+        "operationId" : "addInventory",
+        "description" : "Adds an item to the system",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "inventoryItem",
+          "description" : "Inventory item to add",
+          "schema" : {
+            "$ref" : "#/definitions/Book"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "item created"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "an existing item already exists"
+          }
+        }
+      }
+    },
+    "/books/{id}" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "returns a specific book content",
+        "operationId" : "getBook",
+        "description" : "when a book id is provided, this endpoint returns book details by book id",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "required" : true,
+          "name" : "id",
+          "description" : "book id",
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "401" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "not found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "developers" ],
+        "summary" : "modifies a specified book content",
+        "operationId" : "modifyBook",
+        "description" : "when a book id is provided, this endpoint modifies book content by book id",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "type" : "string",
+          "description" : "book id"
+        }, {
+          "in" : "body",
+          "name" : "book details",
+          "description" : "book details",
+          "schema" : {
+            "$ref" : "#/definitions/BookUpdate"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "401" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "developers" ],
+        "summary" : "deletes a single book object",
+        "operationId" : "deleteBook",
+        "description" : "when a book id is provided, it deletes a single book from the database",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "type" : "string",
+          "required" : true,
+          "description" : "book id"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "401" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Book" : {
+      "type" : "object",
+      "required" : [ "title", "author" ],
+      "properties" : {
+        "title" : {
+          "type" : "string"
+        },
+        "author" : {
+          "type" : "string"
+        }
+      }
+    },
+    "BookUpdate" : {
+      "type" : "object",
+      "required" : [ "newData" ],
+      "properties" : {
+        "newData" : {
+          "type" : "object",
+          "required" : [ "title", "author" ],
+          "properties" : {
+            "title" : {
+              "type" : "string"
+            },
+            "author" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
